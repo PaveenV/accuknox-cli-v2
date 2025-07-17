@@ -424,7 +424,7 @@ EOF
 
 PROJECT_NAME="knoxctl"
 OWNER=accuknox
-REPO="knoxctl-website"
+REPO="accuknox-cli-v2"
 BINARY=knoxctl
 FORMAT=tar.gz
 OS=$(uname_os)
