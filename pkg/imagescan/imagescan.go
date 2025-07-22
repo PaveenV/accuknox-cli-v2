@@ -50,6 +50,7 @@ func DiscoverAndScan(conf kubesheildConfig.Config, hostName, runtime string) err
 
 	// Additional fields added along with the scan results while calling artifact API
 	conf.ScanConfig.AdditionalData = map[string]any{"host_name": hostName}
+	conf.ScanConfig.ScanTool = "trivy" // Default scanning tool
 
 	imageScanner := kubesheildScanner.New(conf)
 

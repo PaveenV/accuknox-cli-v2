@@ -15,8 +15,8 @@ var (
 var imageScanCmd = &cobra.Command{
 	Use:   "image-scan",
 	Short: "scans vm container images",
-	Long: `Scans VM container images using trivy 
-and sends back the result to saas through artifact API
+	Long: `Scans VM container images 
+and sends back the result to saas
 		`,
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -37,7 +37,7 @@ func init() {
 	imageScanCmd.Flags().StringVarP(&cfg.ScanConfig.TenantID, "tenantId", "", "", "tenant id")
 
 	// Scan Configurations
-	imageScanCmd.Flags().StringVarP(&cfg.ScanConfig.ScanTool, "tool", "", "trivy", "tool used for scanning")
+	// imageScanCmd.Flags().StringVarP(&cfg.ScanConfig.ScanTool, "tool", "", "trivy", "container image scanning tool")
 	imageScanCmd.Flags().StringVarP(&HOST_NAME, "hostname", "", "", "name of the host")
 	imageScanCmd.Flags().StringVarP(&RUN_TIME, "runtime", "r", "", "container runtime used in the host machine")
 
