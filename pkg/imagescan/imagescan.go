@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"regexp"
 	"syscall"
 
 	kubesheildDiscovery "github.com/accuknox/kubeshield/pkg/discovery"
@@ -100,4 +101,11 @@ func IsTrivyInstalled() error {
 		return fmt.Errorf("Trivy is not installed or not found in $PATH. Please install Trivy to enable image scanning")
 	}
 	return nil
+}
+
+func IsValidDomain(domain string) bool {
+	// Basic regex for domain name validation (simplified)
+	// This does not cover all edge cases or internationalized domain names (IDNs)
+	re := regexp.MustCompile(`^[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$`)
+	return re.MatchString(domain)
 }

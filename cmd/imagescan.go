@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/accuknox/accuknox-cli-v2/pkg/imagescan"
 	kubesheildConfig "github.com/accuknox/kubeshield/pkg/scanner/config"
 	"github.com/spf13/cobra"
@@ -20,6 +22,10 @@ and sends back the result to saas
 		`,
 	Args: cobra.NoArgs,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
+		if !imagescan.IsValidDomain(cfg.ScanConfig.ArtifactAPI) {
+			return fmt.Errorf("invalid domain name: %s", cfg.ScanConfig.ArtifactAPI)
+		}
+		cfg.ScanConfig.ArtifactAPI = fmt.Sprintf("https://%s/api/v1/artifact/", cfg.ScanConfig.ArtifactAPI)
 		return imagescan.IsTrivyInstalled()
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
