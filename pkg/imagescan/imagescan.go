@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"os/exec"
-	"regexp"
 	"syscall"
 
 	kubesheildDiscovery "github.com/accuknox/kubeshield/pkg/discovery"
@@ -32,6 +30,16 @@ func DiscoverAndScan(conf kubesheildConfig.Config, hostName, runtime string) err
 			fmt.Printf("error: %v\n", err)
 		}
 	}()
+
+	// Install trivy if it is not exists
+	if !IsTrivyInstalled() {
+		if err := installTrivy(); err != nil {
+			return fmt.Errorf("error while installing container image scanner: %v", err)
+		}
+		zapLogger.Info("Dowloaded container image scanner successfully")
+		// Remove trivy binary, if it is installed by knoxctl
+		defer cleanupInstalledBinaryPath()
+	}
 
 	conf.Images = discoverImages(zapLogger.Sugar(), hostName, runtime)
 	if len(conf.Images) == 0 {
@@ -94,18 +102,4 @@ func discoverImages(logger *zap.SugaredLogger, hostName, runtime string) []kubes
 		}
 	}
 	return images
-}
-
-func IsTrivyInstalled() error {
-	if _, err := exec.LookPath("trivy"); err != nil {
-		return fmt.Errorf("Trivy is not installed or not found in $PATH. Please install Trivy to enable image scanning")
-	}
-	return nil
-}
-
-func IsValidDomain(domain string) bool {
-	// Basic regex for domain name validation (simplified)
-	// This does not cover all edge cases or internationalized domain names (IDNs)
-	re := regexp.MustCompile(`^[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$`)
-	return re.MatchString(domain)
 }
